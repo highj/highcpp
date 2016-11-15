@@ -1,3 +1,6 @@
+#ifndef __DATA_EITHER_HPP__
+#define __DATA_EITHER_HPP__
+
 #include <functional>
 #include <iostream>
 
@@ -59,3 +62,5 @@ namespace highcpp_data {
   }
 
 }
+
+#endif // __DATA_EITHER_HPP__

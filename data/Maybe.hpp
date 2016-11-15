@@ -1,5 +1,10 @@
+#ifndef __DATA_MAYBE_HPP__
+#define __DATA_MAYBE_HPP__
+
 #include <functional>
 #include <iostream>
+
+#include "../typeclass1/Functor.hpp"
 
 namespace highcpp_data {
 
@@ -47,5 +52,21 @@ namespace highcpp_data {
     )();
     return os;
   }
-
 }
+
+namespace highcpp_typeclass1 {
+  template<>
+  struct Functor<highcpp_data::Maybe> {
+    template <typename A, typename B>
+    static highcpp_data::Maybe<B> map(std::function<B(const A&)> f, highcpp_data::Maybe<A> ma) {
+      return ma.cata(
+        highcpp_data::Maybe<B>::nothing(),
+        std::function<highcpp_data::Maybe<B>(const A&)>([&](const A& a) {
+          return highcpp_data::Maybe<A>::just(f(a));
+        })
+      );
+    }
+  };
+}
+
+#endif // __DATA_MAYBE_HPP__
