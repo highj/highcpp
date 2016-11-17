@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../typeclass1/Functor.hpp"
+#include "../typeclass1/Apply.hpp"
 
 namespace highcpp_data {
 
@@ -62,8 +63,23 @@ namespace highcpp_typeclass1 {
       return ma.cata(
         highcpp_data::Maybe<B>::nothing(),
         std::function<highcpp_data::Maybe<B>(const A&)>([&](const A& a) {
-          return highcpp_data::Maybe<A>::just(f(a));
+          return highcpp_data::Maybe<B>::just(f(a));
         })
+      );
+    }
+  };
+
+  template<>
+  struct Apply<highcpp_data::Maybe> {
+    template <typename A, typename B>
+    static highcpp_data::Maybe<B> apply(highcpp_data::Maybe<std::function<B(const A&)>> mf, highcpp_data::Maybe<A> ma) {
+      return mf.cata(
+        highcpp_data::Maybe<B>::nothing(),
+        std::function<highcpp_data::Maybe<B>(const std::function<B(const A&)>&)>(
+          [&](const std::function<B(const A&)>& f) {
+            return map(f, ma);
+          }
+        )
       );
     }
   };
