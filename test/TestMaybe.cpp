@@ -21,5 +21,7 @@ int main() {
     b
   );
   cout << c << endl;
+  auto d = Applicative<Maybe>::pure(7.5f);
+  cout << d << endl;
   return 0;
 }

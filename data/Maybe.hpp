@@ -6,6 +6,7 @@
 
 #include "../typeclass1/Functor.hpp"
 #include "../typeclass1/Apply.hpp"
+#include "../typeclass1/Applicative.hpp"
 
 namespace highcpp_data {
 
@@ -81,6 +82,14 @@ namespace highcpp_typeclass1 {
           }
         )
       );
+    }
+  };
+
+  template<>
+  struct Applicative<highcpp_data::Maybe> {
+    template <typename A>
+    static highcpp_data::Maybe<A> pure(A a) {
+      return highcpp_data::Maybe<A>::just(a);
     }
   };
 }
