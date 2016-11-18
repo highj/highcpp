@@ -59,8 +59,9 @@ namespace highcpp_data {
 namespace highcpp_typeclass1 {
   template<>
   struct Functor<highcpp_data::Maybe> {
-    template <typename A, typename B>
-    static highcpp_data::Maybe<B> map(std::function<B(const A&)> f, highcpp_data::Maybe<A> ma) {
+    template <typename A, typename F>
+    static highcpp_data::Maybe<typename highcpp_util::lambda_traits<F>::result_type> map(F f, highcpp_data::Maybe<A> ma) {
+      using B = typename highcpp_util::lambda_traits<F>::result_type;
       return ma.cata(
         highcpp_data::Maybe<B>::nothing(),
         std::function<highcpp_data::Maybe<B>(const A&)>([&](const A& a) {
