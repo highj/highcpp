@@ -7,6 +7,7 @@
 #include "../typeclass1/Functor.hpp"
 #include "../typeclass1/Apply.hpp"
 #include "../typeclass1/Applicative.hpp"
+#include "../typeclass1/Bind.hpp"
 
 namespace highcpp_data {
 
@@ -92,6 +93,20 @@ namespace highcpp_typeclass1 {
     template <typename A>
     static highcpp_data::Maybe<A> pure(A a) {
       return highcpp_data::Maybe<A>::just(a);
+    }
+  };
+
+  template<>
+  struct Bind<highcpp_data::Maybe> {
+    template <typename A, typename F>
+    static typename highcpp_util::lambda_traits<F>::result_type bind(highcpp_data::Maybe<A> ma, F f) {
+      using MB = typename highcpp_util::lambda_traits<F>::result_type;
+      return ma.cata(
+        MB::nothing(),
+        std::function<MB(const A&)>([=](const A& a) {
+          return f(a);
+        })
+      );
     }
   };
 }

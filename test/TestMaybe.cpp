@@ -23,5 +23,7 @@ int main() {
   cout << c << endl;
   auto d = Applicative<Maybe>::pure(7.5f);
   cout << d << endl;
+  auto e = d >>= [](float x) { return Applicative<Maybe>::pure(x * 0.5f); };
+  cout << e << endl;
   return 0;
 }
