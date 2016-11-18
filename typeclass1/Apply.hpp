@@ -3,17 +3,18 @@
 
 #include <functional>
 #include "Functor.hpp"
+#include "../util/traits.hpp"
 
 namespace highcpp_typeclass1 {
 
   template <template <typename> class M>
   struct Apply {
-    template <typename A, typename B>
-    static M<B> apply(M<std::function<B(const A&)>> mf, M<A> ma);
+    template <typename A, typename F>
+    static M<typename highcpp_util::lambda_traits<F>::result_type> apply(M<F> mf, M<A> ma);
   };
 
-  template <template <typename> class M, typename A, typename B>
-  static M<B> apply(M<std::function<B(const A&)>> mf, M<A> ma) {
+  template <template <typename> class M, typename A, typename F>
+  static M<typename highcpp_util::lambda_traits<F>::result_type> apply(M<F> mf, M<A> ma) {
     return Apply<M>::apply(mf, ma);
   }
 
