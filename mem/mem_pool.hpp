@@ -46,7 +46,7 @@ namespace highcpp_mem {
 
     int index;
 
-    MemPoolRef() {}
+    MemPoolRef();
   };
 
   template <typename A>
@@ -59,6 +59,12 @@ namespace highcpp_mem {
       cout << "Pool Size: " << poolSize << endl;
       cout << "Free Indices Capacity: " << freeIndicesCapacity << endl;
       cout << "Free Indices Size: " << freeIndicesSize << endl;
+      cout << "Free Indices: [";
+      for (int i = 0; i < freeIndicesSize; ++i) {
+        if (i != 0) { cout << ", "; }
+        cout << freeIndices[i];
+      }
+      cout << "]" << endl;
     }
 
   private:
@@ -91,12 +97,12 @@ namespace highcpp_mem {
       pushFreeIndex(index);
     }
 
-    static const A& read(MemPoolRef<A> ref) {
-      return pool[ref.index];
+    static const A& read(int index) {
+      return pool[index];
     }
 
-    static void write(MemPoolRef<A> ref, A value) {
-      pool[ref.index] = value;
+    static void write(int index, A value) {
+      pool[index] = value;
     }
 
     static void initMemPool() {
