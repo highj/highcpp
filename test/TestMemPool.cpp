@@ -14,6 +14,12 @@ int main() {
     MemPoolRef<int> c = MemPoolRef<int>::of(7);
     cout << "---" << endl;
     MemPool<int>::logState();
+    cout << "---" << endl;
+    cout << "a = " << a.read() << endl;
+    cout << "b = " << b.read() << endl;
+    cout << "c = " << c.read() << endl;
+    cout << "---" << endl;
+    MemPool<int>::logState();
   }
   cout << "---" << endl;
   MemPool<int>::logState();

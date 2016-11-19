@@ -15,17 +15,35 @@ namespace highcpp_mem {
 
     MemPoolRef(MemPoolRef&& ref) {
       index = ref.index;
+      ref.index = -1;
+    }
+
+    MemPoolRef(const MemPoolRef<A>& other): index(other.read()) {
     }
 
     ~MemPoolRef() {
+      if (index != -1) {
+        MemPool<A>::free(index);
+      }
+    }
+
+    MemPoolRef<A>& operator=(const MemPoolRef<A>& other) {
       MemPool<A>::free(index);
+      index = MemPool<A>::alloc(other.read());
+      return *this;
     }
 
     static MemPoolRef<A> of(A a) {
       MemPoolRef<A> ref(MemPool<A>::alloc(a));
       return ref;
     }
+
+    const A& read() const {
+      return MemPool<A>::read(index);
+    }
   private:
+    friend struct MemPool<A>;
+
     int index;
 
     MemPoolRef() {}
@@ -73,7 +91,7 @@ namespace highcpp_mem {
       pushFreeIndex(index);
     }
 
-    static A read(MemPoolRef<A> ref) {
+    static const A& read(MemPoolRef<A> ref) {
       return pool[ref.index];
     }
 
