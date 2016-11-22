@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 
+#include "../mem/mem_pool.hpp"
 #include "../typeclass1/Functor.hpp"
 #include "../typeclass1/Apply.hpp"
 #include "../typeclass1/Applicative.hpp"
@@ -11,11 +12,13 @@
 
 namespace highcpp_data {
 
+  using namespace highcpp_mem;
+
   template <typename A>
   class Maybe {
   public:
 
-    static Maybe<A> just(A a) {
+    static Maybe<A> just(const A& a) {
       return Maybe(a);
     }
 
@@ -25,20 +28,25 @@ namespace highcpp_data {
 
     template <typename B>
     B cata(B kNothing, std::function<B(const A&)> kJust) const {
-      if (hasValue) {
-        return kJust(value);
-      } else {
+      if (memPoolIndex == -1) {
         return kNothing;
+      } else {
+        return kJust(MemPool<A>::read(memPoolIndex));
+      }
+    }
+
+    ~Maybe() {
+      if (memPoolIndex != -1) {
+        MemPool<A>::free(memPoolIndex);
       }
     }
 
   private:
-    bool hasValue;
-    A value;
+    int memPoolIndex;
 
-    Maybe(): hasValue(false) {}
+    Maybe(): memPoolIndex(-1) {}
 
-    Maybe(A a): hasValue(true), value(a) {}
+    Maybe(const A& a): memPoolIndex(MemPool<A>::alloc(a)) {}
   };
 
   template <typename A>

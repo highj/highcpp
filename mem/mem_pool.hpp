@@ -78,19 +78,7 @@ namespace highcpp_mem {
       cout << "]" << endl;
     }
 
-  private:
-    friend struct MemPoolRef<A>;
-
-    static A* pool;
-    static int* freeIndices;
-    static int poolCapacity;
-    static int poolSize;
-    static int freeIndicesCapacity;
-    static int freeIndicesSize;
-    static const int poolInitSize = 64;
-    static const int freeIndicesInitSize = 64;
-
-    static int alloc(A a) {
+    static int alloc(const A& a) {
       if (pool == nullptr) { initMemPool(); }
       if (hasFreeIndex()) {
         int index = popFreeIndex();
@@ -111,6 +99,18 @@ namespace highcpp_mem {
     static const A& read(int index) {
       return pool[index];
     }
+
+  private:
+    friend struct MemPoolRef<A>;
+
+    static A* pool;
+    static int* freeIndices;
+    static int poolCapacity;
+    static int poolSize;
+    static int freeIndicesCapacity;
+    static int freeIndicesSize;
+    static const int poolInitSize = 64;
+    static const int freeIndicesInitSize = 64;
 
     static void write(int index, A value) {
       pool[index] = value;
