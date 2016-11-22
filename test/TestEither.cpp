@@ -8,20 +8,26 @@ using namespace highcpp_data;
 class MyClassA {
 public:
   MyClassA() {
-    cout << "MyClassA constructor.";
+    cout << "MyClassA constructor." << endl;
+  }
+  MyClassA(const MyClassA&) {
+    cout << "MyClassA constructor." << endl;
   }
   virtual ~MyClassA() {
-    cout << "MyClassA destructor.";
+    cout << "MyClassA destructor." << endl;
   }
 };
 
 class MyClassB {
 public:
   MyClassB() {
-    cout << "MyClassB constructor.";
+    cout << "MyClassB constructor." << endl;
+  }
+  MyClassB(const MyClassB&) {
+    cout << "MyClassB constructor." << endl;
   }
   virtual ~MyClassB() {
-    cout << "MyClassB destructor.";
+    cout << "MyClassB destructor." << endl;
   }
 };
 

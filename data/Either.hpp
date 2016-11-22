@@ -3,38 +3,46 @@
 
 #include <functional>
 #include <iostream>
+#include "../mem/mem_pool.hpp"
 
 namespace highcpp_data {
+
+  using namespace highcpp_mem;
 
   template <typename A, typename B>
   class Either {
   public:
 
-    static Either<A,B> left(A a) {
-      B dummy;
-      return Either(false, a, dummy);
+    static Either<A,B> left(const A& a) {
+      return Either(false, MemPool<A>::alloc(a));
     }
 
-    static Either<A,B> right(B b) {
-      A dummy;
-      return Either(true, dummy, b);
+    static Either<A,B> right(const B& b) {
+      return Either(true, MemPool<B>::alloc(b));
     }
 
     template <typename C>
     C cata(std::function<C(const A&)> kLeft, std::function<C(const B&)> kRight) const {
       if (isRight) {
-        return kRight(rightValue);
+        return kRight(MemPool<B>::read(memPoolIndex));
       } else {
-        return kLeft(leftValue);
+        return kLeft(MemPool<A>::read(memPoolIndex));
+      }
+    }
+
+    ~Either() {
+      if (isRight) {
+        MemPool<B>::free(memPoolIndex);
+      } else {
+        MemPool<A>::free(memPoolIndex);
       }
     }
 
   private:
     bool isRight;
-    A leftValue;
-    B rightValue;
+    int memPoolIndex;
 
-    Either(bool isRight, A leftValue, B rightValue): isRight(isRight), leftValue(leftValue), rightValue(rightValue) {}
+    Either(bool isRight, int memPoolIndex): isRight(isRight), memPoolIndex(memPoolIndex) {}
   };
 
   template <typename A, typename B>
