@@ -11,6 +11,8 @@ namespace highcpp_mem {
 
   template <typename A>
   struct MemPoolRef {
+    MemPoolRef(): index(-1) {}
+
     MemPoolRef(int index): index(index) {}
 
     MemPoolRef(MemPoolRef&& ref) {
@@ -45,8 +47,6 @@ namespace highcpp_mem {
     friend struct MemPool<A>;
 
     int index;
-
-    MemPoolRef();
   };
 
   template <typename A>
