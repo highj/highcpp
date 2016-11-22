@@ -20,7 +20,12 @@ namespace highcpp_mem {
       ref.index = -1;
     }
 
-    MemPoolRef(const MemPoolRef<A>& other): index(MemPool<A>::alloc(other.read())) {
+    MemPoolRef(const MemPoolRef<A>& other) {
+      if (other.index == -1) {
+        index = -1;
+      } else {
+        index = MemPool<A>::alloc(other.read());
+      }
     }
 
     ~MemPoolRef() {
@@ -30,8 +35,14 @@ namespace highcpp_mem {
     }
 
     MemPoolRef<A>& operator=(const MemPoolRef<A>& other) {
-      MemPool<A>::free(index);
-      index = MemPool<A>::alloc(other.read());
+      if (index != -1) {
+        MemPool<A>::free(index);
+      }
+      if (other.index == -1) {
+        index = -1;
+      } else {
+        index = MemPool<A>::alloc(other.read());
+      }
       return *this;
     }
 
