@@ -30,6 +30,16 @@ namespace highcpp_data {
       }
     }
 
+    Either(const Either<A,B>& other) {
+      if (other.isRight) {
+        isRight = true;
+        memPoolIndex = MemPool<B>::alloc(MemPool<B>::read(other.memPoolIndex));
+      } else {
+        isRight = false;
+        memPoolIndex = MemPool<A>::alloc(MemPool<A>::read(other.memPoolIndex));
+      }
+    }
+
     ~Either() {
       if (isRight) {
         MemPool<B>::free(memPoolIndex);

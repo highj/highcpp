@@ -35,6 +35,14 @@ namespace highcpp_data {
       }
     }
 
+    Maybe(const Maybe<A>& other) {
+      if (other.memPoolIndex == -1) {
+        memPoolIndex = -1;
+      } else {
+        memPoolIndex = MemPool<A>::alloc(MemPool<A>::read(other.memPoolIndex));
+      }
+    }
+
     ~Maybe() {
       if (memPoolIndex != -1) {
         MemPool<A>::free(memPoolIndex);
