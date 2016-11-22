@@ -4,13 +4,10 @@ using namespace highcpp_data;
 using namespace highcpp_mem;
 
 int main() {
-  List<int> list =
-    List<int>::cons(1,
-      MemPoolRef<List<int>>::of(List<int>::cons(2,
-        MemPoolRef<List<int>>::of(List<int>::cons(3,
-          MemPoolRef<List<int>>::of(List<int>::nil())
-        ))
-      ))
-    );
+  MemPoolRef<List<int>> a = MemPoolRef<List<int>>::of(List<int>::nil());
+  MemPoolRef<List<int>> b = MemPoolRef<List<int>>::of(List<int>::cons(3, a));
+  MemPoolRef<List<int>> c = MemPoolRef<List<int>>::of(List<int>::cons(2, b));
+  List<int> d = List<int>::cons(1, c);
+  MemPool<List<int>>::logState();
   return 0;
 }
