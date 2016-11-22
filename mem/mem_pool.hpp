@@ -18,7 +18,7 @@ namespace highcpp_mem {
       ref.index = -1;
     }
 
-    MemPoolRef(const MemPoolRef<A>& other): index(other.read()) {
+    MemPoolRef(const MemPoolRef<A>& other): index(MemPool<A>::alloc(other.read())) {
     }
 
     ~MemPoolRef() {
